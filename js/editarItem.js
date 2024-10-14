@@ -5,6 +5,9 @@ export const editarItem = (elemento) => {
         const itemTextoAtualizado = elemento.querySelector("#item-titulo");
         itemTextoAtualizado.textContent = novoItem;
 
+        const itemDataAtualizada = elemento.querySelector(".texto-data");
+        itemDataAtualizada.innerText = `${new Date().toLocaleDateString("pt-BR", { weekday: "long" })} (${new Date().toLocaleDateString()}) às ${new Date().toLocaleTimeString("pt-BR", { hour: "numeric", minute: "numeric" })}`;
+
         const estavaComprado = elemento.querySelector(".input-checkbox").checked;
 
         if (estavaComprado) {

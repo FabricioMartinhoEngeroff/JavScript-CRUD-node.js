@@ -1,9 +1,11 @@
 import { editarItem } from "./editarItem.js";
 import { excluirItem } from "./excluirItem.js";
 import { verificarListaComprados } from "./verificarListaComprados.js";
+
 const listaDeCompras = document.getElementById("lista-de-compras");
 const listaComprados = document.getElementById("lista-comprados");
 let contador = 0;
+
 export function criarItemDaLista(item) {
     const itemDaLista = document.createElement("li");
     const containerItemLista = document.createElement("div");
