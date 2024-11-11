@@ -1,34 +1,46 @@
+Memoteca
+Memoteca é um aplicativo organizador de pensamentos e frases que permite cadastrar, listar, editar e deletar pensamentos, incluindo informações como conteúdo e autoria.
 
-![Descricao da sua imagem](https://imgur.com/C8TfWXc.png)
+🔨 Funcionalidades do projeto
+Cadastro de pensamentos: Permite adicionar novos pensamentos à lista, inserindo informações como conteúdo e autoria.
 
-# Titulo do projeto
+Listagem de pensamentos: Exibe os pensamentos cadastrados, permitindo visualizar o texto e a autoria.
 
-Aplicação web de lista de compras para o curso de construção de páginas dinâmicas com JavaScript.
+Edição de pensamentos: Permite editar pensamentos existentes, atualizando as informações conforme necessário.
 
-## 🔨 Funcionalidades do projeto
+Exclusão de pensamentos: Permite remover pensamentos da lista.
 
-A aplicação permite inserir itens em uma lista de forma dinâmica, permitindo a exclusão e edição dos mesmos. Os itens terão o nome e também a data e horário que foram criados. Também é possível selecionar um checkbox para informar que o item foi comprado.
+✔️ Técnicas e tecnologias utilizadas
+JavaScript: Linguagem de programação utilizada para desenvolver a lógica do aplicativo.
 
-![Inserção no campo de digitação do valor ração de gato, após, é clicado no botão de edição, onde é aberto um popup para digitar o novo do nome item, que foi digitado ração de cachorro. Em seguida, é clicado no botão de exclusão, e o item é excluído.](https://imgur.com/isPj7Xf.gif)
+Fetch API: Utilizada para realizar requisições HTTP para comunicação com o servidor.
 
-## ✔️ Técnicas e tecnologias utilizadas
+Axios: Biblioteca usada para facilitar e simplificar as requisições HTTP.
 
-As técnicas e tecnologias utilizadas pra isso são:
+Node.js: Plataforma utilizada para executar o ambiente de desenvolvimento.
 
-- `HTML`: criação dos elementos da tela;
-- `CSS`: estilização da aplicação;
-- `JavaScript`: construção de elementos dinâmicos através da manipulação do DOM.
+JSON Server: Utilizado para simular um backend e facilitar o desenvolvimento e teste das operações CRUD.
 
-## 📁 Acesso ao projeto
+CSS: Utilizado para estilização da interface do aplicativo.
 
-Você pode [acessar o código fonte do projeto inicial](https://github.com/alura-cursos/3801-javascript-para-web/tree/projeto-base) ou [baixá-lo](https://github.com/alura-cursos/3801-javascript-para-web/archive/refs/heads/projeto-base.zip).
+📁 Link do Figma
+Você pode acessar o figma do projeto aqui.
 
-## 🛠️ Abrir e rodar o projeto
+🛠️ Abrir e rodar o projeto
+Para executar a API fake, você vai precisar do NodeJS; a versão utilizada foi a 20.12.2.
 
-Após baixar o projeto, você pode abrir com o Visual Studio Code. Para isso, no menu superior, clique em:
+Instale o JSON Server globalmente (se ainda não estiver instalado):
 
-- **File** > **Open Folder** (ou alguma opção similar)
-- Procure o local onde o projeto está e o selecione (Caso o projeto seja baixado via zip, é necessário extraí-lo antes de procurá-lo)
-- Por fim clique em OK
+npm install -g json-server
+Para executar, abra um novo terminal e, dentro da pasta backend, execute:
 
-Ao finalizar esses passos, você pode executar a aplicação com a extensão Live Server 🏆 
+npm start
+Acesse o backend localmente em seu navegador:
+
+http://localhost:3000
+
+Para executar o frontend, abra o projeto no Visual Studio Code. Com a extensão Live Server instalada, clique com o botão direito no arquivo index.html e selecione "Open with Live Server" no menu de contexto.
+
+Acesse o frontend localmente em seu navegador:
+
+http://localhost:5500
