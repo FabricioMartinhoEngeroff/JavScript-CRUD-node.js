@@ -1,5 +1,14 @@
 {
-  "dependencies": {
-    "json-server": "^1.0.0-beta.3"
+  "name": "javascript-pra-web-projeto-crud",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "json-server --watch db.json --port 3000"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "json-server": "^1.0.0"
   }
 }

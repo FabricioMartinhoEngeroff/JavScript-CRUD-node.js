@@ -19,18 +19,23 @@ const ui = {
     listaPensamentos.innerHTML = "";
 
     try {
-      const pensamentos = await api.buscarPensamentos();
-      if (pensamentos.length === 0) {
-        mensagemVazia.style.display = "block";
-      } else {
-        mensagemVazia.style.display = "none";
-        pensamentos.forEach(ui.adicionarPensamentoNaLista);
-      } 
+        let pensamentosParaRenderizar;
+        if (pensamentosFiltrados) {
+            pensamentosParaRenderizar = pensamentosFiltrados;
+        } else {
+            pensamentosParaRenderizar = await api.buscarPensamentos();
+        }
+
+        if (pensamentosParaRenderizar.length === 0) {
+            mensagemVazia.style.display = "block";
+        } else {
+            mensagemVazia.style.display = "none";
+            pensamentosParaRenderizar.forEach(ui.adicionarPensamentoNaLista);
+        }
+    } catch (error) {
+        console.error("Erro ao renderizar pensamentos:", error);
     }
-    catch {
-      alert('Erro ao renderizar pensamentos');
-    }
-  },
+},
 
   adicionarPensamentoNaLista(pensamento) {
     const listaPensamentos = document.getElementById("lista-pensamentos");
@@ -71,6 +76,14 @@ const ui = {
       }
     };
 
+    const botaoFavorito = document.createElement("button");
+    botaoFavorito.classList.add("botao-favorito");
+
+    const iconeFavorito = document.createElement("img");
+    iconeFavorito.src = "assets/imagens/icone-favorito_outline.png";
+    iconeFavorito.alt = "Favorito";
+    botaoFavorito.appendChild(iconeFavorito);
+
     const iconeExcluir = document.createElement("img");
     iconeExcluir.src = "assets/imagens/icone-excluir.png";
     iconeExcluir.alt = "Excluir";
@@ -78,8 +91,10 @@ const ui = {
 
     const icones = document.createElement("div");
     icones.classList.add("icones");
+    icones.appendChild(botaoFavorito);
     icones.appendChild(botaoEditar);
     icones.appendChild(botaoExcluir);
+    
 
     li.appendChild(iconeAspas);
     li.appendChild(pensamentoConteudo);
