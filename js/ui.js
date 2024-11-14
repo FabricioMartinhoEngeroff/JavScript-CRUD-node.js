@@ -20,6 +20,7 @@ const ui = {
 
     try {
         let pensamentosParaRenderizar;
+        let pensamentosFiltrados;
         if (pensamentosFiltrados) {
             pensamentosParaRenderizar = pensamentosFiltrados;
         } else {
