@@ -7,36 +7,39 @@ const ui = {
     document.getElementById("pensamento-id").value = pensamento.id;
     document.getElementById("pensamento-conteudo").value = pensamento.conteudo;
     document.getElementById("pensamento-autoria").value = pensamento.autoria;
+    document.getElementById("pensamento-data").value = pensamento.data;
+    document.getElementById("form-container").scrollIntoView().
+      toISOString().split("T")[0];
   },
 
   limparFormulario() {
     document.getElementById("pensamento-form").reset();
   },
-  
+
   async renderizarPensamentos() {
     const listaPensamentos = document.getElementById("lista-pensamentos");
     const mensagemVazia = document.getElementById("mensagem-vazia");
     listaPensamentos.innerHTML = "";
 
     try {
-        let pensamentosParaRenderizar;
-        let pensamentosFiltrados;
-        if (pensamentosFiltrados) {
-            pensamentosParaRenderizar = pensamentosFiltrados;
-        } else {
-            pensamentosParaRenderizar = await api.buscarPensamentos();
-        }
+      let pensamentosParaRenderizar;
+      let pensamentosFiltrados;
+      if (pensamentosFiltrados) {
+        pensamentosParaRenderizar = pensamentosFiltrados;
+      } else {
+        pensamentosParaRenderizar = await api.buscarPensamentos();
+      }
 
-        if (pensamentosParaRenderizar.length === 0) {
-            mensagemVazia.style.display = "block";
-        } else {
-            mensagemVazia.style.display = "none";
-            pensamentosParaRenderizar.forEach(ui.adicionarPensamentoNaLista);
-        }
+      if (pensamentosParaRenderizar.length === 0) {
+        mensagemVazia.style.display = "block";
+      } else {
+        mensagemVazia.style.display = "none";
+        pensamentosParaRenderizar.forEach(ui.adicionarPensamentoNaLista);
+      }
     } catch (error) {
-        console.error("Erro ao renderizar pensamentos:", error);
+      console.error("Erro ao renderizar pensamentos:", error);
     }
-},
+  },
 
   adicionarPensamentoNaLista(pensamento) {
     const listaPensamentos = document.getElementById("lista-pensamentos");
@@ -56,6 +59,33 @@ const ui = {
     const pensamentoAutoria = document.createElement("div");
     pensamentoAutoria.textContent = pensamento.autoria;
     pensamentoAutoria.classList.add("pensamento-autoria");
+
+    const pensamentoData = document.createElement("div");
+    pensamentoData.classList.add("pensamento-data");
+
+    const options = {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      timeZone: 'UTC'
+    };
+
+    // Acesse a propriedade correta `dataHoraUTC`
+    let dataFormatada;
+    try {
+      const data = new Date(pensamento.dataHoraUTC);
+      if (!isNaN(data.getTime())) {
+        dataFormatada = data.toLocaleDateString('pt-BR', options);
+      } else {
+        throw new Error("Data inválida");
+      }
+    } catch (error) {
+      console.error("Erro ao formatar a data:", error);
+      dataFormatada = "Data inválida";
+    }
+
+    pensamentoData.textContent = dataFormatada;
 
     const botaoEditar = document.createElement("button");
     botaoEditar.classList.add("botao-editar");
@@ -79,19 +109,19 @@ const ui = {
 
     const botaoFavorito = document.createElement("button");
     botaoFavorito.classList.add("botao-favorito");
-    botaoFavorito.onclick = async() => {
-      try{
+    botaoFavorito.onclick = async () => {
+      try {
         await api.atualizarFavorito(pensamento.id, !pensamento.favorito);
         ui.renderizarPensamentos();
-      }catch(error){
-      alert("Erro ao atualizar pensamento");
+      } catch (error) {
+        alert("Erro ao atualizar pensamento");
+      }
     }
-  }
 
     const iconeFavorito = document.createElement("img");
     iconeFavorito.src = pensamento.favorito ?
-    "assets/imagens/icone-favorito" :
-    "assets/imagens/icone-favorito_outline.png";
+      "assets/imagens/icone-favorito" :
+      "assets/imagens/icone-favorito_outline.png";
     iconeFavorito.alt = "Favorito";
     botaoFavorito.appendChild(iconeFavorito);
 
@@ -105,11 +135,12 @@ const ui = {
     icones.appendChild(botaoFavorito);
     icones.appendChild(botaoEditar);
     icones.appendChild(botaoExcluir);
-    
+
 
     li.appendChild(iconeAspas);
     li.appendChild(pensamentoConteudo);
     li.appendChild(pensamentoAutoria);
+    li.appendChild(pensamentoData);
     li.appendChild(icones);
     listaPensamentos.appendChild(li);
   }

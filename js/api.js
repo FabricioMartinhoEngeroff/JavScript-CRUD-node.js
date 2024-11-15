@@ -1,36 +1,57 @@
 const URL_BASE = "http://localhost:3000";
 
+const converterStringParaData = (dataString) => {
+  const [ano, mes, dia] = dataString.split("-");
+  return new Date(Date.UTC(ano, mes, dia));
+}
+
 const api = {
   async buscarPensamentos() {
     try {
-      const response = await axios.get(`${URL_BASE}/pensamentos`);
-      return await response.data;
+      const response = await axios.get(`${URL_BASE}/pensamentos`)
+      const pensamentos = await response.data
+
+      return pensamentos.map(pensamento => {
+        return {
+          ...pensamento,
+          data: new Date(pensamento.data)
+        }
+      })
     }
     catch {
-      alert('Erro ao buscar pensamentos');
-      throw error;
+      alert('Erro ao buscar pensamentos')
+      throw error
     }
   },
 
   async salvarPensamento(pensamento) {
     try {
-      const response = await axios.post(`${URL_BASE}/pensamentos`, pensamento);
-      return await response.data;
+      const data = converterStringParaData(pensamento.data)
+      const response = await axios.post(`${URL_BASE}/pensamentos`, {
+        ...pensamento,
+        data: data.toISOString()
+      })
+      return await response.data
     }
     catch {
-      alert('Erro ao salvar pensamento');
-      throw error;
+      alert('Erro ao salvar pensamento')
+      throw error
     }
   },
 
   async buscarPensamentoPorId(id) {
     try {
-      const response = await axios.get(`${URL_BASE}/pensamentos/${id}`);
-      return await response.data;
+      const response = await axios.get(`${URL_BASE}/pensamentos/${id}`)
+      const pensamento = await response.data
+
+      return {
+        ...pensamento,
+        data: new Date(pensamento.data)
+      }
     }
     catch {
-      alert('Erro ao buscar pensamento');
-      throw error;
+      alert('Erro ao buscar pensamento')
+      throw error
     }
   },
 
