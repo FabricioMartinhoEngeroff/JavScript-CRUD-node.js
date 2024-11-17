@@ -71,7 +71,6 @@ const ui = {
       timeZone: 'UTC'
     };
 
-    // Acesse a propriedade correta `dataHoraUTC`
     let dataFormatada;
     try {
       const data = new Date(pensamento.dataHoraUTC);

@@ -1,6 +1,12 @@
 import ui from "./ui.js";
 import api from "./api.js";
 
+const regexConteudo = /^[A-Za-z\s]{10,}$/;
+
+function validarConteudo(conteudo) {
+  return regexConteudo.test(conteudo);
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   ui.renderizarPensamentos();
 
@@ -13,6 +19,12 @@ document.addEventListener("DOMContentLoaded", () => {
   inputBusca.addEventListener("input", manipularBusca);
 });
 
+const regexAutoria = /^[a-zA-Z]{3,15}$/;
+
+function validarAutoria(autoria) {
+  return regexAutoria.test(autoria);
+}
+
 async function manipularSubmissaoFormulario(event) {
   event.preventDefault();
   const id = document.getElementById("pensamento-id").value;
@@ -20,11 +32,21 @@ async function manipularSubmissaoFormulario(event) {
   const autoria = document.getElementById("pensamento-autoria").value;
   const data = document.getElementById("pensamento-data").value;
 
-  if (!validarData(data)) {
-    alert("Não é permitido o cadastro de datas futuras. Selecione outra data")
-    return
+  if (!validarConteudo(conteudo)) {
+    alert("É permitida a inclusão apenas de letras e espaços com no mínimo 10 caracteres");
+    return;
   }
-  
+
+  if (!validarAutoria(autoria)) {
+    alert("A autoria deve conter apenas letras e ter entre 3 e 15 caracteres.");
+    return;
+  }
+
+  if (!validarData(data)) {
+    alert("Não é permitido o cadastro de datas futuras. Selecione outra data");
+    return;
+  }
+
   try {
     if (id) {
       await api.editarPensamento({ id, conteudo, autoria, data });
@@ -48,7 +70,7 @@ async function manipularBusca() {
 }
 
 function validarData(data) {
-  const dataAtual = new Date()
-  const dataInserida = new Date(data)
-  return dataInserida <= dataAtual
+  const dataAtual = new Date();
+  const dataInserida = new Date(data);
+  return dataInserida <= dataAtual;
 }
