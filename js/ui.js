@@ -1,148 +1,136 @@
-import api from "./api.js";
+import api from "./api.js"
 
 const ui = {
 
   async preencherFormulario(pensamentoId) {
-    const pensamento = await api.buscarPensamentoPorId(pensamentoId);
-    document.getElementById("pensamento-id").value = pensamento.id;
-    document.getElementById("pensamento-conteudo").value = pensamento.conteudo;
-    document.getElementById("pensamento-autoria").value = pensamento.autoria;
-    document.getElementById("pensamento-data").value = pensamento.data;
-    document.getElementById("form-container").scrollIntoView().
-      toISOString().split("T")[0];
+    const pensamento = await api.buscarPensamentoPorId(pensamentoId)
+    document.getElementById("pensamento-id").value = pensamento.id
+    document.getElementById("pensamento-conteudo").value = pensamento.conteudo
+    document.getElementById("pensamento-autoria").value = pensamento.autoria
+    document.getElementById("pensamento-data").value = pensamento.data.
+    toISOString().split("T")[0]
+    document.getElementById("form-container").scrollIntoView()
   },
 
   limparFormulario() {
-    document.getElementById("pensamento-form").reset();
+    document.getElementById("pensamento-form").reset()
   },
 
-  async renderizarPensamentos() {
-    const listaPensamentos = document.getElementById("lista-pensamentos");
-    const mensagemVazia = document.getElementById("mensagem-vazia");
-    listaPensamentos.innerHTML = "";
-
+  async renderizarPensamentos(pensamentosFiltrados = null) {
+    const listaPensamentos = document.getElementById("lista-pensamentos")
+    const mensagemVazia = document.getElementById("mensagem-vazia")
+    listaPensamentos.innerHTML = ""
+  
     try {
-      let pensamentosParaRenderizar;
-      let pensamentosFiltrados;
-      if (pensamentosFiltrados) {
-        pensamentosParaRenderizar = pensamentosFiltrados;
-      } else {
-        pensamentosParaRenderizar = await api.buscarPensamentos();
-      }
+      let pensamentosParaRenderizar
 
-      if (pensamentosParaRenderizar.length === 0) {
-        mensagemVazia.style.display = "block";
+      if(pensamentosFiltrados) {
+        pensamentosParaRenderizar = pensamentosFiltrados
       } else {
-        mensagemVazia.style.display = "none";
-        pensamentosParaRenderizar.forEach(ui.adicionarPensamentoNaLista);
+        pensamentosParaRenderizar = await api.buscarPensamentos()
       }
-    } catch (error) {
-      console.error("Erro ao renderizar pensamentos:", error);
+      
+      if (pensamentosParaRenderizar.length === 0) {
+        mensagemVazia.style.display = "block"
+      } else {
+        mensagemVazia.style.display = "none"
+        pensamentosParaRenderizar.forEach(ui.adicionarPensamentoNaLista)
+      } 
+    }
+    catch {
+      alert('Erro ao renderizar pensamentos')
     }
   },
 
   adicionarPensamentoNaLista(pensamento) {
-    const listaPensamentos = document.getElementById("lista-pensamentos");
-    const li = document.createElement("li");
-    li.setAttribute("data-id", pensamento.id);
-    li.classList.add("li-pensamento");
+    const listaPensamentos = document.getElementById("lista-pensamentos")
+    const li = document.createElement("li")
+    li.setAttribute("data-id", pensamento.id)
+    li.classList.add("li-pensamento")
 
-    const iconeAspas = document.createElement("img");
-    iconeAspas.src = "assets/imagens/aspas-azuis.png";
-    iconeAspas.alt = "Aspas azuis";
-    iconeAspas.classList.add("icone-aspas");
+    const iconeAspas = document.createElement("img")
+    iconeAspas.src = "assets/imagens/aspas-azuis.png"
+    iconeAspas.alt = "Aspas azuis"
+    iconeAspas.classList.add("icone-aspas")
 
-    const pensamentoConteudo = document.createElement("div");
-    pensamentoConteudo.textContent = pensamento.conteudo;
-    pensamentoConteudo.classList.add("pensamento-conteudo");
+    const pensamentoConteudo = document.createElement("div")
+    pensamentoConteudo.textContent = pensamento.conteudo
+    pensamentoConteudo.classList.add("pensamento-conteudo")
 
-    const pensamentoAutoria = document.createElement("div");
-    pensamentoAutoria.textContent = pensamento.autoria;
-    pensamentoAutoria.classList.add("pensamento-autoria");
+    const pensamentoAutoria = document.createElement("div")
+    pensamentoAutoria.textContent = pensamento.autoria
+    pensamentoAutoria.classList.add("pensamento-autoria")
 
-    const pensamentoData = document.createElement("div");
-    pensamentoData.classList.add("pensamento-data");
+    const pensamentoData = document.createElement("div")
 
-    const options = {
+    var options = {
       weekday: 'long',
       year: 'numeric',
       month: 'long',
       day: 'numeric',
       timeZone: 'UTC'
-    };
-
-    let dataFormatada;
-    try {
-      const data = new Date(pensamento.dataHoraUTC);
-      if (!isNaN(data.getTime())) {
-        dataFormatada = data.toLocaleDateString('pt-BR', options);
-      } else {
-        throw new Error("Data inválida");
-      }
-    } catch (error) {
-      console.error("Erro ao formatar a data:", error);
-      dataFormatada = "Data inválida";
     }
+    const dataFormatada = pensamento.data.toLocaleDateString('pt-BR', options)
+    const dataComRegex = dataFormatada.replace(/^(\w)/, (match) => match.toUpperCase())
+    pensamentoData.textContent = dataComRegex
+    pensamentoData.classList.add("pensamento-data")
 
-    pensamentoData.textContent = dataFormatada;
+    const botaoEditar = document.createElement("button")
+    botaoEditar.classList.add("botao-editar")
+    botaoEditar.onclick = () => ui.preencherFormulario(pensamento.id)
 
-    const botaoEditar = document.createElement("button");
-    botaoEditar.classList.add("botao-editar");
-    botaoEditar.onclick = () => ui.preencherFormulario(pensamento.id);
+    const iconeEditar = document.createElement("img")
+    iconeEditar.src = "assets/imagens/icone-editar.png"
+    iconeEditar.alt = "Editar"
+    botaoEditar.appendChild(iconeEditar)
 
-    const iconeEditar = document.createElement("img");
-    iconeEditar.src = "assets/imagens/icone-editar.png";
-    iconeEditar.alt = "Editar";
-    botaoEditar.appendChild(iconeEditar);
-
-    const botaoExcluir = document.createElement("button");
-    botaoExcluir.classList.add("botao-excluir");
+    const botaoExcluir = document.createElement("button")
+    botaoExcluir.classList.add("botao-excluir")
     botaoExcluir.onclick = async () => {
       try {
-        await api.excluirPensamento(pensamento.id);
-        ui.renderizarPensamentos();
+        await api.excluirPensamento(pensamento.id)
+        ui.renderizarPensamentos()
       } catch (error) {
-        alert("Erro ao excluir pensamento");
-      }
-    };
-
-    const botaoFavorito = document.createElement("button");
-    botaoFavorito.classList.add("botao-favorito");
-    botaoFavorito.onclick = async () => {
-      try {
-        await api.atualizarFavorito(pensamento.id, !pensamento.favorito);
-        ui.renderizarPensamentos();
-      } catch (error) {
-        alert("Erro ao atualizar pensamento");
+        alert("Erro ao excluir pensamento")
       }
     }
 
-    const iconeFavorito = document.createElement("img");
-    iconeFavorito.src = pensamento.favorito ?
-      "assets/imagens/icone-favorito" :
-      "assets/imagens/icone-favorito_outline.png";
-    iconeFavorito.alt = "Favorito";
-    botaoFavorito.appendChild(iconeFavorito);
+    const iconeExcluir = document.createElement("img")
+    iconeExcluir.src = "assets/imagens/icone-excluir.png"
+    iconeExcluir.alt = "Excluir"
+    botaoExcluir.appendChild(iconeExcluir)
 
-    const iconeExcluir = document.createElement("img");
-    iconeExcluir.src = "assets/imagens/icone-excluir.png";
-    iconeExcluir.alt = "Excluir";
-    botaoExcluir.appendChild(iconeExcluir);
+    const botaoFavorito = document.createElement("button")
+    botaoFavorito.classList.add("botao-favorito")
+    botaoFavorito.onclick = async () => {
+      try {
+        await api.atualizarFavorito(pensamento.id, !pensamento.favorito)
+        ui.renderizarPensamentos()
+      } catch (error) {
+        alert("Erro ao atualizar pensamento")
+      }
+    }
 
-    const icones = document.createElement("div");
-    icones.classList.add("icones");
-    icones.appendChild(botaoFavorito);
-    icones.appendChild(botaoEditar);
-    icones.appendChild(botaoExcluir);
+    const iconeFavorito = document.createElement("img")
+    iconeFavorito.src = pensamento.favorito ? 
+    "assets/imagens/icone-favorito.png" :
+    "assets/imagens/icone-favorito_outline.png"
+    iconeFavorito.alt = "Ícone de favorito"
+    botaoFavorito.appendChild(iconeFavorito)
 
+    const icones = document.createElement("div")
+    icones.classList.add("icones")
+    icones.appendChild(botaoFavorito)
+    icones.appendChild(botaoEditar)
+    icones.appendChild(botaoExcluir)
 
-    li.appendChild(iconeAspas);
-    li.appendChild(pensamentoConteudo);
-    li.appendChild(pensamentoAutoria);
-    li.appendChild(pensamentoData);
-    li.appendChild(icones);
-    listaPensamentos.appendChild(li);
+    li.appendChild(iconeAspas)
+    li.appendChild(pensamentoConteudo)
+    li.appendChild(pensamentoAutoria)
+    li.appendChild(pensamentoData)
+    li.appendChild(icones)
+    listaPensamentos.appendChild(li)
   }
-};
+}
 
-export default ui;
+export default ui
